@@ -1,4 +1,4 @@
-using BlazorApp2.Data;
+using HanoiTowers.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 

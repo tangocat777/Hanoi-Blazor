@@ -11,19 +11,19 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["BlazorApp2/BlazorApp2.csproj", "BlazorApp2/"]
-RUN dotnet restore "./BlazorApp2/BlazorApp2.csproj"
+COPY ["HanoiTowers/HanoiTowers.csproj", "HanoiTowers/"]
+RUN dotnet restore "./HanoiTowers/HanoiTowers.csproj"
 COPY . .
-WORKDIR "/src/BlazorApp2"
-RUN dotnet build "./BlazorApp2.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/HanoiTowers"
+RUN dotnet build "./HanoiTowers.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./BlazorApp2.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./HanoiTowers.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "BlazorApp2.dll"]
+ENTRYPOINT ["dotnet", "HanoiTowers.dll"]

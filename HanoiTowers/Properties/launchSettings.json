@@ -1,13 +1,13 @@
 {
   "profiles": {
-    "BlazorApp2": {
+    "HanoiTowers": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7066;http://localhost:5113"
+      "applicationUrl": "https://localhost:7138;http://localhost:5166"
     },
     "IIS Express": {
       "commandName": "IISExpress",
@@ -31,8 +31,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:53849",
-      "sslPort": 44306
+      "applicationUrl": "http://localhost:49063",
+      "sslPort": 44320
     }
   }
 }

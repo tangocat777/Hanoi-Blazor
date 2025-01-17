@@ -1,4 +1,4 @@
-namespace BlazorApp2.Data
+namespace HanoiTowers.Data
 {
     public class WeatherForecast
     {
