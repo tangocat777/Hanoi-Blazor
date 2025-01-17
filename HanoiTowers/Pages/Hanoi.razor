@@ -1,0 +1,56 @@
+﻿@page "/hanoi"
+@using HanoiTowers.Components
+@using HanoiTowers.Models.Hanoi
+
+<PageTitle>Hanoi</PageTitle>
+
+<h3>Hanoi</h3>
+
+<div class="container">
+    <div class="row">
+        <Tower stack=tower1 towerNumber=1 />
+        <Tower stack=tower2 towerNumber=2 />
+        <Tower stack=tower3 towerNumber=3/>
+    </div>
+    <div className="row">
+        <input type="button" @onclick="e => StartTowers(3)" value="3" />
+    </div>
+</div>
+
+@code {
+    private Stack<Disk> tower1 = new Stack<Disk>();
+    private Stack<Disk> tower2 = new Stack<Disk>();
+    private Stack<Disk> tower3 = new Stack<Disk>();
+
+    private async void StartTowers(int startingSize)
+    {
+        tower1 = new Stack<Disk>();
+        tower2 = new Stack<Disk>();
+        tower3 = new Stack<Disk>();
+        for (int i = startingSize; i >= 1; i--)
+        {
+            tower1.Push(new Disk() { Size = i });
+        }
+        await Task.Delay(1000);
+        StateHasChanged();
+        await SolveTowers(startingSize, tower1, tower3, tower2);
+    }
+
+    private async Task SolveTowers(int n, Stack<Disk> from, Stack<Disk> to, Stack<Disk> aux)
+    {
+            if (n <= 0)
+            {
+                return;
+            }
+            await SolveTowers(n - 1, from, aux, to);
+
+            var popped = from.Pop();
+            to.Push(popped);
+
+            await Task.Delay(1000);
+            StateHasChanged();
+
+            await SolveTowers(n - 1, aux, to, from);
+    }
+}
+

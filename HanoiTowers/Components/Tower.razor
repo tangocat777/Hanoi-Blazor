@@ -1,0 +1,16 @@
+﻿@using HanoiTowers.Models.Hanoi;
+
+<span class="col-4" id="@this.towerNumber">
+	@foreach (var disk in stack.ToArray())
+	{	<div>
+			<input disabled={true} @bind="disk.Size" />
+		</div>
+	}
+</span>
+
+@code {
+	[Parameter]
+	public Stack<Disk> stack { get; set; } = new Stack<Disk>();
+	[Parameter]
+	public int towerNumber { get; set; } = 0;
+}
