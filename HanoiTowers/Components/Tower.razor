@@ -1,6 +1,10 @@
 ﻿@using HanoiTowers.Models.Hanoi;
 
 <span class="col-4" id="@this.towerNumber">
+	@for (var i = 0; i < maxTowers - stack.Count; i++)
+	{
+		<br />
+	}
 	@foreach (var disk in stack.ToArray())
 	{	<div>
 			<input disabled={true} @bind="disk.Size" />
@@ -11,6 +15,8 @@
 @code {
 	[Parameter]
 	public Stack<Disk> stack { get; set; } = new Stack<Disk>();
+	[Parameter]
+	public int maxTowers { get; set; } = 9;
 	[Parameter]
 	public int towerNumber { get; set; } = 0;
 }
