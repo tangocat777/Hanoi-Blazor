@@ -1,0 +1,51 @@
+﻿body {
+}
+
+.hanoi-button {
+    font-weight:bold;
+    text-align: center;
+}
+
+.hanoi-spacer {
+    opacity: 0;
+}
+
+.hanoi-div {
+    text-align: center;
+}
+
+.hanoi-button-1 {
+    background-color: #ffc7c7;
+}
+
+.hanoi-button-2 {
+    background-color: #fadec3;
+}
+
+.hanoi-button-3 {
+    background-color: #faf5c3;
+}
+
+.hanoi-button-4 {
+    background-color: #e7fac3;
+}
+
+.hanoi-button-5 {
+    background-color: #c3fac6;
+}
+
+.hanoi-button-6 {
+    background-color: #c3fae4;
+}
+
+.hanoi-button-7 {
+    background-color: #c3f4fa;
+}
+
+.hanoi-button-8 {
+    background-color: #c4c3fa;
+}
+
+.hanoi-button-9 {
+    background-color: #e7c3fa;
+}

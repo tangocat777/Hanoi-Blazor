@@ -1,16 +1,18 @@
 ﻿@using HanoiTowers.Models.Hanoi;
 
-<span class="col-4" id="@this.towerNumber">
+<div class="col-4" id="@this.towerNumber">
 	@for (var i = 0; i < maxTowers - stack.Count; i++)
 	{
-		<br />
+		<div class="hanoi-spacer"><input disabled/></div>
 	}
 	@foreach (var disk in stack.ToArray())
-	{	<div>
-			<input disabled={true} @bind="disk.Size" />
+	{
+		<div class="hanoi-div">
+			<input disabled={true} style="width:@(100-((maxTowers-disk.Size)*widthDecrease))%"
+			class="hanoi-button hanoi-button-@(disk.Size)" @bind="disk.Size" />
 		</div>
 	}
-</span>
+</div>
 
 @code {
 	[Parameter]
@@ -19,4 +21,5 @@
 	public int maxTowers { get; set; } = 9;
 	[Parameter]
 	public int towerNumber { get; set; } = 0;
+	public const int widthDecrease = 5;
 }
