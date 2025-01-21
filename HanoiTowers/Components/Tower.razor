@@ -8,8 +8,8 @@
 	@foreach (var disk in stack.ToArray())
 	{
 		<div class="hanoi-div">
-			<input disabled={true} style="width:@(100-((maxTowers-disk.Size)*widthDecrease))%"
-			class="hanoi-button hanoi-button-@(disk.Size)" @bind="disk.Size" />
+			<input disabled={true} style="width:@(100-((maxTowers-disk.size)*widthDecrease))%"
+			class="hanoi-button hanoi-button-@(disk.size)" @bind="disk.size" />
 		</div>
 	}
 </div>

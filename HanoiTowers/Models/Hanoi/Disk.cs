@@ -2,6 +2,6 @@
 {
     public class Disk
     {
-        public int Size { get; set; }
+        public int size { get; set; }
     }
 }
