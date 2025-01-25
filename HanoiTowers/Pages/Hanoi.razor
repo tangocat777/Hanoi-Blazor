@@ -14,20 +14,31 @@
         <Tower stack=state.tower3.tower towerNumber=3/>
     </div>
     <div class="row mt-4">
-        <input type="button" class="col-3 mx-1 mt-1 hanoi-button-1 hanoi-button" @onclick="e => StartTowers(1)" value="1" />
-        <input type="button" class="col-3 mx-1 mt-1 hanoi-button-2 hanoi-button" @onclick="e => StartTowers(2)" value="2" />
-        <input type="button" class="col-3 mx-1 mt-1 hanoi-button-3 hanoi-button" @onclick="e => StartTowers(3)" value="3" />
-        <input type="button" class="col-3 mx-1 mt-1 hanoi-button-4 hanoi-button" @onclick="e => StartTowers(4)" value="4" />
-        <input type="button" class="col-3 mx-1 mt-1 hanoi-button-5 hanoi-button" @onclick="e => StartTowers(5)" value="5" />
-        <input type="button" class="col-3 mx-1 mt-1 hanoi-button-6 hanoi-button" @onclick="e => StartTowers(6)" value="6" />
-        <input type="button" class="col-3 mx-1 mt-1 hanoi-button-7 hanoi-button" @onclick="e => StartTowers(7)" value="7" />
-        <input type="button" class="col-3 mx-1 mt-1 hanoi-button-8 hanoi-button" @onclick="e => StartTowers(8)" value="8" />
-        <input type="button" class="col-3 mx-1 mt-1 hanoi-button-9 hanoi-button" @onclick="e => StartTowers(9)" value="9" />
+        <input type="button" class="col-3 mx-1 mt-1 hanoi-button-1 hanoi-button" @onclick="e => StartTowers(1)" disabled="@(continueSolving)" value="1" />
+        <input type="button" class="col-3 mx-1 mt-1 hanoi-button-2 hanoi-button" @onclick="e => StartTowers(2)" disabled="@(continueSolving)"  value="2" />
+        <input type="button" class="col-3 mx-1 mt-1 hanoi-button-3 hanoi-button" @onclick="e => StartTowers(3)" disabled="@(continueSolving)"  value="3" />
+        <input type="button" class="col-3 mx-1 mt-1 hanoi-button-4 hanoi-button" @onclick="e => StartTowers(4)" disabled="@(continueSolving)"  value="4" />
+        <input type="button" class="col-3 mx-1 mt-1 hanoi-button-5 hanoi-button" @onclick="e => StartTowers(5)" disabled="@(continueSolving)"  value="5" />
+        <input type="button" class="col-3 mx-1 mt-1 hanoi-button-6 hanoi-button" @onclick="e => StartTowers(6)" disabled="@(continueSolving)"  value="6" />
+        <input type="button" class="col-3 mx-1 mt-1 hanoi-button-7 hanoi-button" @onclick="e => StartTowers(7)" disabled="@(continueSolving)" value="7" />
+        <input type="button" class="col-3 mx-1 mt-1 hanoi-button-8 hanoi-button" @onclick="e => StartTowers(8)" disabled="@(continueSolving)" value="8" />
+        <input type="button" class="col-3 mx-1 mt-1 hanoi-button-9 hanoi-button" @onclick="e => StartTowers(9)" disabled="@(continueSolving)" value="9" />
+    </div>
+    <div class="row mt-4">
+        <input type="button" class="col-3 mx-1 mt-1" @onclick="() => ResumeTowers()" value="Continue" disabled="@(continueSolving || state.solveSteps.Count == 0)"/>
+        <input type="button" class="col-3 mx-1 mt-1" @onclick="() => HaltTowers()" value="Stop"/>
+        <input type="button" class="col-3 mx-1 mt-1" @onclick="() => ProgressOneTowers()" value="StepOne"/>
     </div>
 </div>
 
 @code {
     private TowerState state = new TowerState(new NamedTower(), new NamedTower(), new NamedTower(), new Queue<SolveStep>());
+    private bool continueSolving = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        state = TowerState.ReadFromFile();
+    }
 
     private async void StartTowers(int startingSize)
     {
@@ -39,7 +50,7 @@
             state.tower1.tower.Push(new Disk() { size = i });
         }
         state = StartPlanSolveTowers(startingSize, state.tower1.tower, state.tower3.tower, state.tower2.tower);
-        await Task.Delay(1000);
+        continueSolving = true;
         StateHasChanged();
         await SolveTowersUsingState();
     }
@@ -90,44 +101,73 @@
 
     private async Task SolveTowersUsingState()
     {
+
+        while (state.solveSteps.Count() > 0 && continueSolving)
+        {
+            await ProceedOneStep();
+        }
+        if(state.solveSteps.Count == 0)
+        {
+            continueSolving = false;
+        }
+    }
+
+    private async Task ProceedOneStep()
+    {
         var steps = state.solveSteps;
         var tower1 = state.tower1;
         var tower2 = state.tower2;
         var tower3 = state.tower3;
-        while (steps.Count() > 0)
+        var currentStep = steps.Dequeue();
+        Stack<Disk> from, to;
+        switch (currentStep.from)
         {
-            var currentStep = steps.Dequeue();
-            Stack<Disk> from, to;
-            switch (currentStep.from)
-            {
-                case "2":
-                    from = tower2.tower;
-                    break;
-                case "3":
-                    from = tower3.tower;
-                    break;
-                case "1":
-                default:
-                    from = tower1.tower;
-                    break;
-            }
-            switch (currentStep.to)
-            {
-                case "2":
-                    to = tower2.tower;
-                    break;
-                case "3":
-                    to = tower3.tower;
-                    break;
-                case "1":
-                default:
-                    to = tower1.tower;
-                    break;
-            }
-            to.Push(from.Pop());
-            await Task.Delay(1000);
-            StateHasChanged();
+            case "2":
+                from = tower2.tower;
+                break;
+            case "3":
+                from = tower3.tower;
+                break;
+            case "1":
+            default:
+                from = tower1.tower;
+                break;
         }
+        switch (currentStep.to)
+        {
+            case "2":
+                to = tower2.tower;
+                break;
+            case "3":
+                to = tower3.tower;
+                break;
+            case "1":
+            default:
+                to = tower1.tower;
+                break;
+        }
+        to.Push(from.Pop());
+        await Task.Delay(1000);
+        StateHasChanged();
     }
+
+    private void ResumeTowers()
+    {
+        continueSolving = true;
+        SolveTowersUsingState();
+    }
+
+    private void HaltTowers()
+    {
+        continueSolving = false;
+        state.WriteToFile();
+    }
+
+    private async void ProgressOneTowers()
+    {
+        await ProceedOneStep();
+        state.WriteToFile();
+    }
+
 }
 

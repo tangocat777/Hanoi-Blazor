@@ -44,13 +44,36 @@ namespace HanoiTowers.Models.Hanoi
             {
                 reader = new StreamReader(fileName);
                 var fileContents = reader.ReadToEnd();
-                return JsonConvert.DeserializeObject<TowerState>(fileContents);
+                var newState = JsonConvert.DeserializeObject<TowerState>(fileContents);
+                newState.ReverseAllStacks();
+                return newState;
             }
             finally
             {
                 if (reader != null)
                     reader.Close();
             }
+            return new TowerState(new NamedTower(), new NamedTower(), new NamedTower(), new Queue<SolveStep>());
+        }
+
+        private void ReverseAllStacks()
+        {
+            ReverseStack(this.tower1);
+            ReverseStack(this.tower2);
+            ReverseStack(this.tower3);
+        }
+
+        /*
+         * When deserializing with Newtonsoft, the order of stacks is reversed. This lets us correct the order on read.
+         */
+        public static void ReverseStack(NamedTower tower)
+        {
+            var newStack = new Stack<Disk>();
+            foreach(Disk d in tower.tower)
+            {
+                newStack.Push(d);
+            }
+            tower.tower = newStack;
         }
     }
 }
